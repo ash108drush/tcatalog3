@@ -20,22 +20,22 @@ struct BusStat{
 };
 class RouteItem{
 public:
-     RouteItem(){};
+
+    virtual ~RouteItem() {}
     std::string type ="";
     double time = 0;
-    ~RouteItem(){};
 
 };
 class RouteItemWait: public RouteItem{
 public:
-    std::string type = "Wait";
+    const std::string type = "Wait";
     std::string stop_name = "";
     double time = 0;
 
 };
 class RouteItemBus: public RouteItem{
 public:
-    std::string type = "Bus";
+    const std::string type = "Bus";
     std::string bus = "";
     int span_count = 0;
     double time = 0;
@@ -62,7 +62,7 @@ public:
     double GetDistance(std::pair<Stop *, Stop *>);
     std::optional<double> RealDistanceCalculator(const Stop*,const Stop*) const;
     std::optional<main::BusStat> GetBusStat(const std::string_view name) const;
-    bool GetRouteStat(std::vector<RouteStat>& route_stat,const std::pair<std::string,std::string> stops) const;
+    bool GetRouteStat(RouteStat& route_stat,const std::pair<std::string,std::string> stops) const;
     std::optional<std::set<std::string_view>> GetStopInfo(std::string_view name) const;
 
 

@@ -155,9 +155,11 @@ void JsonReader::MakeRouteStatRequest(const json::Dict &dict){
             to = std::get<std::string>(value.GetValue());
         }
     }
-    std::vector<main::RouteStat> route_stat;
-    const std::pair<std::string,std::string> stops ={ from, to };
+    main::RouteStat route_stat = {};
+    const std::pair<std::string,std::string> stops = { from, to };
     db_.GetRouteStat(route_stat,stops);
+    Request new_request{id,std::move(route_stat)};
+    stat_.push_back(new_request);
 }
 
 std::string JsonReader::ArrayToString(json::Array node) {
@@ -317,6 +319,52 @@ struct VariantPrinter {
         json::Node dict_node{json::Dict{{"map"s, map_str}, {"request_id"s, key}}};
         arr_ptr->push_back(dict_node); 
     }
+    void operator()(main::RouteStat route_stat)  {
+        json::Array items;
+        for (main::RouteItem& item : route_stat.route_stat){
+            json::Node dict_item;
+            if(item.type == "Wait"){
+                dict_item = json::Builder{}.StartDict()
+                    .Key("stop_name"s)
+                    .Value(dynamic_cast<main::RouteItemWait*>(&item)->stop_name )
+                    .Key("time"s)
+                    .Value(dynamic_cast<main::RouteItemWait*>(&item)->time)
+                    .Key("type"s)
+                    .Value(dynamic_cast<main::RouteItemWait*>(&item)->type)
+                .EndDict().Build();
+            }
+
+            if(item.type == "Bus"){
+                dict_item = json::Builder{}.StartDict()
+                .Key("bus"s)
+                    .Value(dynamic_cast<main::RouteItemBus*>(&item)->bus )
+                    .Key("span_count"s)
+                    .Value(dynamic_cast<main::RouteItemBus*>(&item)->span_count)
+                    .Key("time"s)
+                    .Value(dynamic_cast<main::RouteItemBus*>(&item)->time)
+                    .Key("type"s)
+                    .Value(dynamic_cast<main::RouteItemWait*>(&item)->type)
+                    .EndDict().Build();
+            }
+            items.push_back(std::move(dict_item));
+        }
+
+
+        json::Node dict_node = json::Builder{}.StartDict()
+            .Key("request_id"s)
+            .Value(key)
+            .Key("total_time"s)
+            .Value(route_stat.total_time)
+            .Key("items"s)
+            .Value(items)
+            .EndDict()
+            .Build();
+
+        arr_ptr->push_back(std::move(dict_node));
+
+    }
+
+
 };
 
 void JsonReader::PrintStatRequests(){

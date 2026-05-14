@@ -45,7 +45,11 @@ public:
         }
     }
 
-    using stat_info = std::variant<std::nullptr_t,main::BusStat,std::set<std::string_view>,std::string>;
+    using stat_info = std::variant<std::nullptr_t,
+                                   main::BusStat,
+                                   std::set<std::string_view>,
+                                   std::string,
+                                   main::RouteStat>;
 
 private:
     struct Request{
