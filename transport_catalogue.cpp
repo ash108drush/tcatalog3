@@ -139,9 +139,6 @@ std::optional<main::BusStat> main::TransportCatalogue::GetBusStat(const std::str
     return main::BusStat{stops_on_route,uniq_stops,route_distance, curve};
 }
 
-bool main::TransportCatalogue::GetRouteStat(std::vector<RouteStat> &route_stat, const std::pair<std::string, std::string> stops) const{
-
-}
 
 std::optional<std::set<std::string_view> > main::TransportCatalogue::GetStopInfo(std::string_view name) const {
     const Stop* stop = FindBusStopByName(name);

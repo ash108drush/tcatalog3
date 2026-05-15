@@ -155,11 +155,16 @@ void JsonReader::MakeRouteStatRequest(const json::Dict &dict){
             to = std::get<std::string>(value.GetValue());
         }
     }
-    main::RouteStat route_stat = {};
+    main::RouteStat route_stat = {0,{}};
     const std::pair<std::string,std::string> stops = { from, to };
-    db_.GetRouteStat(route_stat,stops);
-    Request new_request{id,std::move(route_stat)};
-    stat_.push_back(new_request);
+    if(rh_.GetRouteStat(route_stat,stops)){
+        Request new_request{id,std::move(route_stat)};
+        stat_.push_back(new_request);
+    }else{
+        Request new_request{id,nullptr};
+        stat_.push_back(new_request);
+    }
+
 }
 
 std::string JsonReader::ArrayToString(json::Array node) {

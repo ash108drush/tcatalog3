@@ -62,7 +62,7 @@ public:
     double GetDistance(std::pair<Stop *, Stop *>);
     std::optional<double> RealDistanceCalculator(const Stop*,const Stop*) const;
     std::optional<main::BusStat> GetBusStat(const std::string_view name) const;
-    bool GetRouteStat(RouteStat& route_stat,const std::pair<std::string,std::string> stops) const;
+
     std::optional<std::set<std::string_view>> GetStopInfo(std::string_view name) const;
 
 

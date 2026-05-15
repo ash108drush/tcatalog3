@@ -28,8 +28,12 @@ struct BusRoute {
     const Stop * last_stop =nullptr;
 };
 
-
 struct StopEdge{
+    Stop stop;
+    graph::VertexId entry_vertex;
+    graph::VertexId exit_vertex;
+};
+struct StopEdgestr{
     std::string stop_name;
     graph::VertexId entry_vertex;
     graph::VertexId exit_vertex;

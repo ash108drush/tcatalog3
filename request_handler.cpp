@@ -39,3 +39,7 @@ void  RequestHandler::DrawBusRoute(std::unique_ptr<MapRenderer>&& map_renderer_p
    map_renderer_ptr->RenderMap(bus_stops);
 
 }
+
+bool RequestHandler::GetRouteStat(main::RouteStat &route_stat, const std::pair<std::string, std::string> stop_from_to) const {
+    return false;
+}
